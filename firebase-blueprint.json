@@ -1,0 +1,137 @@
+{
+  "entities": {
+    "student": {
+      "title": "Student",
+      "description": "Student details and academic information",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "Unique code for barcode scanning" },
+        "name": { "type": "string", "description": "Full name of student" },
+        "id": { "type": "string", "description": "Registration ID" },
+        "class": { "type": "string", "description": "Class level or study grade" },
+        "parentPhone": { "type": "string", "description": "WhatsApp phone number of parent" },
+        "suspended": { "type": "boolean", "description": "Whether student is currently suspended" },
+        "suspendReason": { "type": "string", "description": "Suspension explanation" },
+        "scheduledTime": { "type": "string", "description": "Expected arrival time (HH:MM)" },
+        "branch": { "type": "string", "description": "School Branch (e.g., فرع أول فيصل)" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "name", "id", "class"]
+    },
+    "employee": {
+      "title": "Employee",
+      "description": "Employee database record",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string", "description": "Scan code for card scanning" },
+        "name": { "type": "string", "description": "Full name of employee" },
+        "attendanceTime": { "type": "string", "description": "Scheduled morning check-in time (HH:MM)" },
+        "role": { "type": "string", "enum": ["employee", "receptionist"], "description": "Role of employee" },
+        "branch": { "type": "string", "description": "Associated branch" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["code", "name", "attendanceTime"]
+    },
+    "attendance": {
+      "title": "Attendance",
+      "description": "Unified attendance records log for students and employees",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["student", "employee"], "description": "Indicates whether the record is for student or employee" },
+        "code": { "type": "string", "description": "Barcode or scan code" },
+        "name": { "type": "string", "description": "Full name" },
+        "date": { "type": "string", "description": "Date formatted in YYYY-MM-DD" },
+        "arrival": { "type": "string", "description": "First scan check-in time or null if absent" },
+        "departure": { "type": "string", "description": "Scan check-out time or null" },
+        "year": { "type": "string", "description": "The active academic year string (start_end)" },
+        "branch": { "type": "string", "description": "Recorded branch for report filters" },
+        "meta": { "type": "object", "description": "Contains optional notes and delay details" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "code", "name", "date", "year"]
+    },
+    "holiday": {
+      "title": "Holiday",
+      "description": "Declared school holidays or individual leaves",
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["general", "specific"] },
+        "studentCode": { "type": "string", "description": "Student bar code if type is specific" },
+        "reason": { "type": "string", "description": "Holiday reason text" },
+        "start": { "type": "string", "description": "Start date YYYY-MM-DD" },
+        "end": { "type": "string", "description": "End date YYYY-MM-DD" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["type", "reason", "start", "end"]
+    },
+    "academicYear": {
+      "title": "AcademicYear",
+      "description": "Identifies individual active/inactive educational semesters/years",
+      "type": "object",
+      "properties": {
+        "start": { "type": "string", "description": "Academic year start window YYYY-MM-DD" },
+        "end": { "type": "string", "description": "Academic year end window YYYY-MM-DD" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["start", "end", "active"]
+    },
+    "settings": {
+      "title": "Settings",
+      "description": "General customized configurations and parameters of the management portal",
+      "type": "object",
+      "properties": {
+        "parentMessage": { "type": "string" },
+        "sendWhatsapp": { "type": "string", "enum": ["enabled", "disabled"] },
+        "provider": { "type": "string", "enum": ["ultramsg", "twilio"] },
+        "ultraInstance": { "type": "string" },
+        "ultraToken": { "type": "string" },
+        "twilioFrom": { "type": "string" },
+        "twilioEndpoint": { "type": "string" },
+        "studentDayStart": { "type": "string" },
+        "studentDayEnd": { "type": "string" },
+        "employeeDayStart": { "type": "string" },
+        "employeeDayEnd": { "type": "string" },
+        "attendanceDeadline": { "type": "string" },
+        "adminPassword": { "type": "string" },
+        "branchPasswords": { "type": "object", "description": "Reception passwords per branch map" },
+        "schoolName": { "type": "string", "description": "Custom school name displayed in headers" },
+        "sendMode": { "type": "string", "enum": ["auto", "manual"] },
+        "sendOnRegister": { "type": "string", "enum": ["yes", "no"] },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["parentMessage", "sendWhatsapp", "provider", "adminPassword"]
+    }
+  },
+  "firestore": {
+    "students": {
+      "schema": "student",
+      "description": "Collection of educational student base data"
+    },
+    "employees": {
+      "schema": "employee",
+      "description": "Collection of employee details"
+    },
+    "attendance": {
+      "schema": "attendance",
+      "description": "Combined database of attendance checkpoints for student and employee entities"
+    },
+    "holidays": {
+      "schema": "holiday",
+      "description": "Holiday schedules on a general/individual scale"
+    },
+    "academicYears": {
+      "schema": "academicYear",
+      "description": "Registered academic semesters/years list"
+    },
+    "settings": {
+      "schema": "settings",
+      "description": "Global config singleton holding variables and keys"
+    }
+  }
+}

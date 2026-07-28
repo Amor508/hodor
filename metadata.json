@@ -1,0 +1,6 @@
+{
+  "name": "Shams School Management System",
+  "description": "نظام شمس متكامل لإدارة حضور وغياب الطلاب والموظفين، جداول الصفوف والدراسة، ومزامنة البيانات عبر السحاب والتنبيهات المتقدمة.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
